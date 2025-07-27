@@ -1,3 +1,33 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase 
 
 # Create your tests here.
+class TestUserRegistration(APITestCase):
+    def setUp(self):
+        ...
+    def test_register_user_success(self):
+        ...
+
+    def test_register_user_duplicate_username(self):
+        ...
+
+class TestUserLogin(APITestCase):   
+    def setUp(self):
+        ...
+    def test_login_user_with_valid_credentials(self):
+        ...
+
+    def test_login_user_with_invalid_credentials(self):
+        ...
+
+class TestUserProfile(APITestCase):
+    def setUp(self):
+        # Create and authenticate a test user
+        ...
+
+    def test_get_profile(self):
+        ...
+
+    def test_patch_profile(self):
+        ...
+    def test_put_profile(self):
+        ...
