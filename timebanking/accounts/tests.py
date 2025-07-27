@@ -1,21 +1,65 @@
 from rest_framework.test import APITestCase 
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+
+User = get_user_model()
 
 # Create your tests here.
 class TestUserRegistration(APITestCase):
-    def setUp(self):
-        ...
+    def setUp(self): #Arrange
+        self.register_url = reverse('register') # get actual URL using url name
+        self.user_data = {
+            "username": "testuser",
+            "email": "test000@example.com",
+            "password": "strongpass123",
+            "password2": "strongpass123",
+        }
     def test_register_user_success(self):
-        ...
+        response = self.client.post(self.register_url, self.user_data, format='json')
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(username='testuser').exists()) #verify database
+        self.assertEqual(response.data["message"], "User registered successfully!")
 
     def test_register_user_duplicate_username(self):
-        ...
+        # Create a user with the same username as above
+        User.objects.create_user(username="testuser", email="test001@example.com", password="password123")
+
+        # Try registering a new user with the same username
+        data = {
+            "username": "testuser",  # duplicate
+            "email": "test2@example.com",
+            "password": "anotherpassword123",
+            "password2": "anotherpassword123"
+        }
+        response = self.client.post(self.register_url, data, format="json")
+        #print(response.data) 
+        # response.data: 'username': [ErrorDetail(string='A user with that username already exists.', code='unique')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("username", response.data)
 
 class TestUserLogin(APITestCase):   
     def setUp(self):
-        ...
+        ## register a user
+        self.register_url = reverse('register') # get actual URL using url name
+        self.login_url = reverse('login')
+        self.user_data = {
+            "username": "testuser",
+            "email": "test000@example.com",
+            "password": "strongpass123",
+            "password2": "strongpass123",
+        }
+        self.client.post(self.register_url, self.user_data, format="json")
     def test_login_user_with_valid_credentials(self):
-        ...
-
+        login_data = {
+            "username": "testuser",
+            "password": "strongpass123",
+        }
+        response = self.client.post(self.login_url, self.user_data, format="json")
+        print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("Token", response.data)
     def test_login_user_with_invalid_credentials(self):
         ...
 
