@@ -67,18 +67,61 @@ class TestUserProfile(APITestCase):
     def setUp(self):
         # Create and authenticate a test user
         ## create a user
-        User.objects.create_user(username="testuser", email="test001@example.com", password="password123", bio="a test bio", skills="cooking, tutoring")
-        # Create token and authenticate
+        self.user = User.objects.create_user(username="testuser", email="test001@example.com", password="password123", bio="a test bio", skills="cooking, tutoring")
+
+        # Create a token for the user
         self.token = Token.objects.create(user=self.user)
+        # tell API test client to include the authorization header in every request
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
         self.profile_url = reverse('profile')
+
     def test_get_profile(self):
         response = self.client.get(self.profile_url, format="json")
-        print(response.data)
+        # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
+        # Check returned user profile data
+        self.assertEqual(response.data['username'], self.user.username)
+        self.assertEqual(response.data['email'], self.user.email)
+        self.assertEqual(response.data['bio'], self.user.bio)
+        self.assertEqual(response.data['skills'], self.user.skills)
 
     def test_patch_profile(self):
-        ...
+        new_profile_data = {
+            "bio": "updated test bio", 
+            "skills": "updated skills"
+        }
+        response = self.client.patch(self.profile_url, new_profile_data, format="json")
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check returned user profile data
+        self.assertEqual(response.data['bio'], new_profile_data['bio'])
+        self.assertEqual(response.data['skills'], new_profile_data['skills'])
+
     def test_put_profile(self):
-        ...
+        new_profile_data = {
+            "bio": "updated test bio", 
+            "skills": "updated skills",
+            "interests": "updated interests",
+            "city": "updated city",
+            "state": "updated state",
+            "zipcode": "updated zipcode"
+        }
+        response = self.client.put(self.profile_url, new_profile_data, format="json")
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check returned user profile data
+        self.assertEqual(response.data['bio'], new_profile_data['bio'])
+        self.assertEqual(response.data['skills'], new_profile_data['skills'])
+        self.assertEqual(response.data['interests'], new_profile_data['interests'])
+        
+    def test_put_profile_with_missing_fields(self):
+        new_profile_data = {
+            "bio": "updated test bio", 
+            "skills": "updated skills",
+            "interests": "updated interests",
+            "city": "updated city",
+        }
+        response = self.client.put(self.profile_url, new_profile_data, format="json")
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
