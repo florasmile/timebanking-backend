@@ -43,8 +43,9 @@ class TestUserRegistration(APITestCase):
 class TestUserLogin(APITestCase):   
     def setUp(self):
         ## create a user
-        User.objects.create_user(username="testuser", email="test001@example.com", password="password123")
+        self.user = User.objects.create_user(username="testuser", email="test001@example.com", password="password123")
         self.login_url = reverse('login')
+
     def test_login_user_with_valid_credentials(self):
         valid_login_credentials= {
             "username": "testuser",
@@ -54,6 +55,7 @@ class TestUserLogin(APITestCase):
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("token", response.data)
+        
     def test_login_user_with_invalid_credentials(self):
         invalid_login_credentials= {
             "username": "testuser",
