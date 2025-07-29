@@ -36,5 +36,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'time_credits',
             'first_name',
             'last_name',
+            'avatar',
         )
         read_only_fields = ('username', 'email', 'time_credits')

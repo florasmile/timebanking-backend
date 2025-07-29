@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'corsheaders', 
     'drf_spectacular', #generate API docs
     'drf_spectacular_sidecar',
+    'cloudinary',   # cloudinary for image uploads
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -161,3 +163,12 @@ AUTH_USER_MODEL = 'accounts.User'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# Cloudinary settings
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
