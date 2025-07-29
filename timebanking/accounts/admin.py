@@ -11,7 +11,7 @@ class CustomUserAdmin(UserAdmin):
         ("Additional Info", {
             "fields": (
                 "bio", "skills", "interests",
-                "time_credits", "city", "state", "zip_code"
+                "time_credits", "city", "state", "zip_code", "avatar"
             )
         }),
     )
@@ -21,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
         ("Additional Info", {
             "fields": (
                 "bio", "skills", "interests",
-                "time_credits", "city", "state", "zip_code"
+                "time_credits", "city", "state", "zip_code", "avatar"
             )
         }),
     )
