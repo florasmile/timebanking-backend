@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
 # /accounts/register/
@@ -21,6 +22,13 @@ class RegisterView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = None
+    @extend_schema(
+        request=None,
+        responses={
+            200: OpenApiResponse(description="Successfully logged out."),
+            400: OpenApiResponse(description="Token not found."),
+        }
+    )
     def post(self, request):
         try:
             token = Token.objects.get(user=request.user)
@@ -53,9 +61,17 @@ class UserProfileView(APIView):
     
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
-
+    serializer_class = ChangePasswordSerializer
+    @extend_schema(
+        request=ChangePasswordSerializer,
+        responses={
+            200: OpenApiResponse(description="Password updated successfully."),
+            400: OpenApiResponse(description="Validation error or wrong password."),
+        }
+    )
     def put(self, request):
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
+
         if serializer.is_valid():
             user = request.user
             if not user.check_password(serializer.validated_data['old_password']):
