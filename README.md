@@ -48,7 +48,7 @@ CREATE DATABASE timebanking_development;
 ```
 5. **Create and configure your database connection in .env**:
   - Copy .env.sample to .env and update as needed
-6. **Run migrations:
+6. **Run migrations**:
 ```bash
   python manage.py migrate
 ```
