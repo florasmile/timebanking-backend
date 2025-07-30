@@ -39,3 +39,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar',
         )
         read_only_fields = ('username', 'email', 'time_credits')
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, validators=[validate_password])
