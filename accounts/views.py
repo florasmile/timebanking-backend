@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer, UserProfileSerializer
+
 
 # /accounts/register/
 # convert to class-based views
@@ -15,6 +17,18 @@ class RegisterView(APIView):
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# /accounts/logout/
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = None
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()  # Deletes token
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except Token.DoesNotExist:
+            return Response({"detail": "Token not found."}, status=status.HTTP_400_BAD_REQUEST)
+        
 # /accounts/profile/
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
