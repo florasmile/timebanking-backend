@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer, EmailAuthSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
@@ -16,6 +16,15 @@ class RegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class EmailTokenLoginView(APIView):
+    def post(self, request):
+        serializer = EmailAuthSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # /accounts/logout/

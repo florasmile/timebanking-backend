@@ -107,7 +107,7 @@ class TestUserProfile(APITestCase):
             "interests": "updated interests",
             "city": "updated city",
             "state": "updated state",
-            "zipcode": "updated zipcode"
+            "zip_code": "updated zip_code"
         }
         response = self.client.put(self.profile_url, new_profile_data, format="json")
         # print(response.data)
