@@ -13,7 +13,7 @@ class CustomUserAdmin(UserAdmin):
             "fields": ("first_name", "last_name", "bio", "skills", "interests")
         }),
         ("Location Info", {
-            "fields": ("city", "state", "zip_code")
+            "fields": ("street", "city", "state", "zip_code")
         }),
         ("Credits", {
             "fields": ("time_credits",)
@@ -36,12 +36,12 @@ class CustomUserAdmin(UserAdmin):
             "fields": ("email", "password1", "password2", "first_name", "last_name"),
         }),
         ("Additional Info", {
-            "fields": ("bio", "skills", "interests", "time_credits", "city", "state", "zip_code", "avatar"),
+            "fields": ("bio", "skills", "interests", "time_credits", "street", "city", "state", "zip_code", "avatar"),
         }),
     )
 
-    list_display = ("email", "first_name", "last_name", "city", "state", "time_credits", "is_staff")
-    search_fields = ("email", "first_name", "last_name", "city", "state")
+    list_display = ("email", "first_name", "last_name", "street", "city", "state", "time_credits", "is_staff")
+    search_fields = ("email", "first_name", "last_name", "city", "state", "zip_code")
     ordering = ("-date_joined",)
 
 admin.site.register(User, CustomUserAdmin)

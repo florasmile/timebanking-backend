@@ -14,6 +14,7 @@ class TestUserRegistration(APITestCase):
             "email": "test000@example.com",
             "password": "strongpass123",
             "password2": "strongpass123",
+            "street": "123 Test Street",
             "city": "Redmond",
             "state": "WA",
             "zip_code": "98052"

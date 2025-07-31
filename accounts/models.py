@@ -26,8 +26,9 @@ class User(AbstractUser):
 
     bio = models.TextField(blank=True)
     skills = models.TextField(blank=True)
-    interests = ArrayField(models.CharField(max_length=100), blank=True, default=list) 
+    interests = ArrayField(models.CharField(max_length=50), blank=True, default=list) 
     time_credits = models.DecimalField(max_digits=6, decimal_places=1, default=0) # default unit: hour
+    street = models.CharField(max_length=100, blank=False)
     city = models.CharField(max_length=100, blank=False)
     state = models.CharField(max_length=100, blank=False)
     zip_code = models.CharField(max_length=10, blank=False)
