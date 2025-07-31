@@ -1,6 +1,22 @@
 from rest_framework import serializers
 from .models import User
 from django.contrib.auth.password_validation import validate_password
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from django.contrib.auth import authenticate
+
+class EmailAuthSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, attrs):
+        user = authenticate(
+            username=attrs['email'],
+            password=attrs['password']
+        )
+        if not user:
+            raise serializers.ValidationError('Invalid email/password')
+        attrs['user'] = user
+        return attrs
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -8,7 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password2', 'city', 'state', 'zip_code', 'bio', 'skills')
+        fields = ('first_name', 'last_name', 'email', 'password', 'password2', 'bio', 'skills', 'interests', 'city', 'state', 'zip_code',  'avatar')
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -25,7 +41,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
+            'first_name',
+            'last_name',
             'email',
             'bio',
             'skills',
@@ -34,11 +51,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'state',
             'zip_code',
             'time_credits',
-            'first_name',
-            'last_name',
             'avatar',
         )
-        read_only_fields = ('username', 'email', 'time_credits')
+        read_only_fields = ('email', 'time_credits')
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)

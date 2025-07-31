@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer, EmailAuthSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
@@ -16,6 +16,30 @@ class RegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class EmailTokenLoginView(APIView):
+    serializer_class = EmailAuthSerializer
+    @extend_schema(
+        request=EmailAuthSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Success - Returns authentication token",
+            ),
+            400: OpenApiResponse(
+                description="Bad request - Invalid input",
+            ),
+            401: OpenApiResponse(
+                description="Unauthorized - Invalid credentials",
+            )
+        }
+    )
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # /accounts/logout/
@@ -46,14 +70,14 @@ class UserProfileView(APIView):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data)
 
-    def put(self, request):
-        return self.update_profile(request, partial=False)
+    # def put(self, request):
+    #     return self.update_profile(request, partial=False)
+
+    # def patch(self, request):
+    #     return self.update_profile(request, partial=True)
 
     def patch(self, request):
-        return self.update_profile(request, partial=True)
-
-    def update_profile(self, request, partial):
-        serializer = self.serializer_class(request.user, data=request.data, partial=partial)
+        serializer = self.serializer_class(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
