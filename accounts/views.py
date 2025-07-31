@@ -19,8 +19,23 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class EmailTokenLoginView(APIView):
+    serializer_class = EmailAuthSerializer
+    @extend_schema(
+        request=EmailAuthSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Success - Returns authentication token",
+            ),
+            400: OpenApiResponse(
+                description="Bad request - Invalid input",
+            ),
+            401: OpenApiResponse(
+                description="Unauthorized - Invalid credentials",
+            )
+        }
+    )
     def post(self, request):
-        serializer = EmailAuthSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
             token, created = Token.objects.get_or_create(user=user)
