@@ -1,9 +1,8 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
+# Register your models here.
+
 
 class CustomUserAdmin(UserAdmin):
     # Add custom fields to the detail/edit view
