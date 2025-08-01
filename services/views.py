@@ -4,12 +4,15 @@ from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 from .models import Service
 from .serializers import ServiceSerializer
-
+from drf_spectacular.utils import extend_schema, extend_schema_view
 # GET/POST 
 # /services/
+@extend_schema_view(
+    get=extend_schema(responses=ServiceSerializer(many=True))
+)
 class ServiceListCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
+    serializer_class = ServiceSerializer
     # List all services or filter by owner/zip code
     def get(self, request):
         owner_id = request.query_params.get('owner_id')
@@ -19,14 +22,14 @@ class ServiceListCreateView(APIView):
             queryset = queryset.filter(owner__id=owner_id)
         if zip_code:
             queryset = queryset.filter(owner__zip_code=zip_code)
-        serializer = ServiceSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
     # Create a new service
     def post(self, request):
         data = request.data.copy()
         data['owner'] = request.user.id
-        serializer = ServiceSerializer(data=data)
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,11 +39,11 @@ class ServiceListCreateView(APIView):
 # /services/<service_id>/
 class ServiceDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
+    serializer_class = ServiceSerializer
     # Retrieve a service by ID
     def get(self, request, service_id):
         service = get_object_or_404(Service, id=service_id)
-        serializer = ServiceSerializer(service)
+        serializer = self.serializer_class(service)
         return Response(serializer.data)
 
     # Update a service (owner only)
@@ -48,7 +51,7 @@ class ServiceDetailView(APIView):
         service = get_object_or_404(Service, id=service_id)
         if service.owner != request.user:
             return Response({'detail': 'Not allowed.'}, status=status.HTTP_403_FORBIDDEN)
-        serializer = ServiceSerializer(service, data=request.data, partial=True)
+        serializer = self.serializer_class(service, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

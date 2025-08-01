@@ -6,7 +6,6 @@ from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer, EmailAuthSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
-
 # /accounts/register/
 # convert to class-based views
 class RegisterView(APIView):
