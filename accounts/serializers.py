@@ -56,6 +56,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('email', 'time_credits')
 
+    def to_representation(self, instance):
+        """Override to ensure avatar returns full URL"""
+        representation = super().to_representation(instance)
+        if instance.avatar:
+            representation['avatar'] = instance.avatar.url
+        else:
+            representation['avatar'] = None
+        return representation
+
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True, validators=[validate_password])
