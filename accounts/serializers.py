@@ -38,6 +38,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -55,6 +57,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar',
         )
         read_only_fields = ('email', 'time_credits')
+
+    def get_avatar(self, obj):
+        if obj.avatar:
+            # Return the full Cloudinary URL
+            return obj.avatar.url
+        return None
+
+    def update(self, instance, validated_data):
+        # Handle avatar upload in updates
+        avatar = validated_data.pop('avatar', None)
+        if avatar:
+            instance.avatar = avatar
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
