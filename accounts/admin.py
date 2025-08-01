@@ -7,27 +7,41 @@ from .models import User
 
 class CustomUserAdmin(UserAdmin):
     # Add custom fields to the detail/edit view
-    fieldsets = UserAdmin.fieldsets + (
-        ("Additional Info", {
-            "fields": (
-                "bio", "skills", "interests",
-                "time_credits", "city", "state", "zip_code", "avatar"
-            )
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Personal Info", {
+            "fields": ("first_name", "last_name", "bio", "skills", "interests")
+        }),
+        ("Location Info", {
+            "fields": ("street", "city", "state", "zip_code")
+        }),
+        ("Credits", {
+            "fields": ("time_credits",)
+        }),
+        ("Avatar", {
+            "fields": ("avatar",)
+        }),
+        ("Permissions", {
+            "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions"),
+        }),
+        ("Important dates", {
+            "fields": ("last_login", "date_joined"),
         }),
     )
 
-    # Add custom fields to the user creation form
-    add_fieldsets = UserAdmin.add_fieldsets + (
+    # Fields to show when creating a new user
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "password1", "password2", "first_name", "last_name"),
+        }),
         ("Additional Info", {
-            "fields": (
-                "bio", "skills", "interests",
-                "time_credits", "city", "state", "zip_code", "avatar"
-            )
+            "fields": ("bio", "skills", "interests", "time_credits", "street", "city", "state", "zip_code", "avatar"),
         }),
     )
 
-    # Optional: display custom fields in the user list view
-    list_display = (
-        "username", "email", "city", "state", "zip_code", "time_credits", "is_staff"
-    )
+    list_display = ("email", "first_name", "last_name", "street", "city", "state", "time_credits", "is_staff")
+    search_fields = ("email", "first_name", "last_name", "city", "state", "zip_code")
+    ordering = ("-date_joined",)
+
 admin.site.register(User, CustomUserAdmin)
