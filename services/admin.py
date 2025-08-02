@@ -7,6 +7,7 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'owner',
+        'service_type',
         'credit_required',
         'is_available',
         'average_rating',
