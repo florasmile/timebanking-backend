@@ -12,3 +12,9 @@ class ServiceSerializer(serializers.ModelSerializer):
             'remaining_sessions', 'owner', 'owner_email'
         ]
         read_only_fields = ['id', 'created_at', 'owner', 'owner_email', 'average_rating', 'remaining_sessions', 'is_available']
+        
+    def create(self, validated_data):
+        total_sessions = validated_data.get('total_sessions')
+        # Set remaining_sessions to total_sessions
+        validated_data['remaining_sessions'] = total_sessions
+        return super().create(validated_data)
