@@ -5,6 +5,7 @@ from rest_framework import status, permissions
 from .models import Booking
 from .serializers import BookingSerializer, BookingCreateSerializer
 from django.utils import timezone
+from rest_framework.exceptions import PermissionDenied
 # Create your views here.
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -32,7 +33,7 @@ class BookingListCreateView(GenericAPIView):
         return BookingCreateSerializer
     # list all bookings belongs to an owner/customer and status
     def get(self, request):
-        print("Query Params:", request.query_params)
+        # print("Query Params:", request.query_params)
         owner_id = request.query_params.get('owner_id')
         customer_id = request.query_params.get('customer_id')
         status = request.query_params.get('status')
@@ -89,6 +90,11 @@ class MarkConfirmedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
+
+        # Ensure only the owner can confirm the booking
+        if booking.owner != request.user:
+            raise PermissionDenied("Only the service owner can confirm this booking.")
+
         if booking.status != "pending":
             return Response({"detail": "Booking must be in 'pending' state."}, status=400)
         booking.status = "confirmed"
@@ -99,6 +105,9 @@ class MarkCompletedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
+        # Ensure only the customer can confirm the booking
+        if booking.customer != request.user:
+            raise PermissionDenied("Only the customer can confirm the completion of this booking.")
         if booking.status != "confirmed":
             return Response({"detail": "Booking must be in 'confirmed' state."}, status=400)
         # add time_credits to owner
@@ -123,6 +132,10 @@ class MarkCancelledView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
+        
+        # ensure only the booking owner or customer has the permission to cancel the booking
+        if (request.user != booking.owner) and (request.user != booking.customer):
+            raise PermissionDenied("Only the owner or customer can cancel this booking.")
         if (booking.status != "pending") and (booking.status !="confirmed"):
             return Response({"detail": "Booking must be in 'pending' or 'confirmed' state."}, status=400)
         # refund time_credits to customer
