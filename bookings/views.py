@@ -1,8 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import Booking
 from .serializers import BookingSerializer, BookingCreateSerializer
+from django.utils import timezone
 # Create your views here.
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -22,27 +24,41 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 )
 class BookingListCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
+    # get serializer class dynamically
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return BookingSerializer
         return BookingCreateSerializer
     # list all bookings belongs to an owner/customer and status
     def get(self, request):
+        print("Query Params:", request.query_params)
         owner_id = request.query_params.get('owner_id')
         customer_id = request.query_params.get('customer_id')
         status = request.query_params.get('status')
 
-        queryset = Booking.objects.all()
-
+        # print("Filtered Customer ID:", customer_id)
+        # start with empty queryset
+        queryset = Booking.objects.none()
+        
         if owner_id:
-            queryset = queryset.filter(owner__id=owner_id)
-        if customer_id:
-            queryset = queryset.filter(customer__id=customer_id)
+            if str(request.user.id) != owner_id:
+                return Response({"detail": "You are not allowed to view other users' bookings."}, status=403)
+            queryset = Booking.objects.filter(owner__id=owner_id)
+        elif customer_id:
+            if str(request.user.id) != customer_id:
+                return Response({"detail": "You are not allowed to view other users' bookings."}, status=403)
+            queryset = Booking.objects.filter(customer__id=customer_id)
+        else:
+            return Response({"detail": "Please provide either owner_id or customer_id."}, status=400)
+        
+        # print("All bookings for customer:", Booking.objects.filter(customer__id=customer_id))
+        # filter by status
         if status:
             queryset = queryset.filter(status=status)
 
         serializer = self.get_serializer(queryset, many=True)
+        # print("serializer.data", serializer.data)
         return Response(serializer.data)
     
     def post(self, request):
@@ -51,7 +67,79 @@ class BookingListCreateView(GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                
+           
 
 # GET/PATCH
 # /bookings/<booking_id>
+class BookingDetailView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BookingSerializer
+
+    def get(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        serializer = self.serializer_class(booking)
+        return Response(serializer.data)
+# change status
+@extend_schema(
+    methods=["PATCH"],
+    responses={200: BookingSerializer}
+)
+class MarkConfirmedView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def patch(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        if booking.status != "pending":
+            return Response({"detail": "Booking must be in 'pending' state."}, status=400)
+        booking.status = "confirmed"
+        booking.save()
+        return Response({"detail": "Booking confirmed."}, status=200)
+    
+class MarkCompletedView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def patch(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        if booking.status != "confirmed":
+            return Response({"detail": "Booking must be in 'confirmed' state."}, status=400)
+        # add time_credits to owner
+        owner = booking.owner
+        service = booking.service
+        owner.time_credits += service.credit_required
+        owner.save()
+
+        booking.status = "completed"
+        booking.completed_at = timezone.now()
+
+        #add customer review and ratings to booking
+
+        # update reviews and ratings in service
+
+        # save data
+        booking.save()
+        
+        return Response({"detail": "Booking completed."}, status=200)
+
+class MarkCancelledView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def patch(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        if booking.status != "pending" or "confirmed":
+            return Response({"detail": "Booking must be in 'pending' or 'confirmed' state."}, status=400)
+        # refund time_credits to customer
+        customer = booking.customer
+        service = booking.service
+        customer.time_credits += service.credit_required
+        customer.save()
+
+        # add remaining_sessions back by 1 to service
+        service.remaining_sessions += 1
+        service.save()
+
+        booking.status = "cancelled"
+        booking.completed_at = timezone.now()
+
+        # save data
+        booking.save()
+        
+        return Response({"detail": "Booking cancelled and credits refunded."}, status=200)
+
+

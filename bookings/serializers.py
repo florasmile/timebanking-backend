@@ -12,18 +12,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = [
-            'id',
-            'status',
-            'booked_at',
-            'completed_at',
-            'customer_review',
-            'customer_rating',
-            'owner',
-            'customer',
-            'service',
-        ]
-        read_only_fields = fields  
+        fields = '__all__' 
 
 class BookingCreateSerializer(serializers.ModelSerializer):
     service_id = serializers.IntegerField(write_only=True) 
@@ -52,6 +41,8 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
         # Deduct one session from the service
         service.remaining_sessions -= 1
+        if service.remaining_sessions == 0:
+            service.is_available == False
         service.save()
 
         #create a booking
