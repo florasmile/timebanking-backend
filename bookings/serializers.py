@@ -29,11 +29,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     service_id = serializers.IntegerField(write_only=True) 
     class Meta:
         model = Booking
-        fields = [
-            'service_id',  
-            'customer_review', # optional
-            'customer_rating' # optinal
-        ] 
+        fields = ['service_id'] 
         read_only_fields = ['status', 'booked_at', 'owner', 'customer']
 
     def create(self, validated_data):

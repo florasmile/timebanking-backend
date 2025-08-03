@@ -9,6 +9,17 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 # GET/POST
 # /bookings/
+@extend_schema(
+    request=BookingCreateSerializer,
+    responses={201: BookingSerializer, 400: dict},
+    methods=["POST"],
+    description="Create a booking if customer has enough time credits and service has remaining sessions."
+)
+@extend_schema(
+    responses={200: BookingSerializer(many=True)},
+    methods=["GET"],
+    description="List bookings filtered by owner_id, customer_id, or status."
+)
 class BookingListCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     
