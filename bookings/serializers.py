@@ -6,13 +6,28 @@ from services.serializers import ServiceSerializer
 from accounts.serializers import UserProfileSerializer
 
 class BookingSerializer(serializers.ModelSerializer):
-    owner = UserProfileSerializer(read_only=True)
-    customer = UserProfileSerializer(read_only=True)
-    service = ServiceSerializer(read_only=True)
+    service_name = serializers.CharField(source='service.name', read_only=True)
+
+    owner_email = serializers.EmailField(source='owner.email', read_only=True)
+    owner_first_name = serializers.CharField(source='owner.first_name', read_only=True)
+
+    customer_email = serializers.EmailField(source='customer.email', read_only=True)
+    customer_first_name = serializers.CharField(source='customer.first_name', read_only=True)
 
     class Meta:
         model = Booking
-        fields = '__all__' 
+        fields = [
+            'id', 'status',
+            'booked_at',
+            'completed_at',
+            'customer_review',
+            'customer_rating',
+            'service_name',
+            'owner_first_name',
+            'owner_email',
+            'customer_first_name',
+            'customer_email'
+        ]
 
 class BookingCreateSerializer(serializers.ModelSerializer):
     service_id = serializers.IntegerField(write_only=True) 

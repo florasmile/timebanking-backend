@@ -61,6 +61,7 @@ class BookingListCreateView(GenericAPIView):
         # print("serializer.data", serializer.data)
         return Response(serializer.data)
     
+    #only customer is allowed to create a booking
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -122,7 +123,7 @@ class MarkCancelledView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
-        if booking.status != "pending" or "confirmed":
+        if (booking.status != "pending") and (booking.status !="confirmed"):
             return Response({"detail": "Booking must be in 'pending' or 'confirmed' state."}, status=400)
         # refund time_credits to customer
         customer = booking.customer

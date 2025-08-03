@@ -5,6 +5,7 @@ from .models import Service
 class ServiceAdmin(admin.ModelAdmin):
     # Fields to display in the list view
     list_display = (
+        'id',
         'name',
         'owner',
         'service_type',
