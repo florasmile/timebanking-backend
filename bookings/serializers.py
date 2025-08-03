@@ -2,8 +2,6 @@ from rest_framework import serializers
 from django.utils import timezone
 from bookings.models import Booking
 from services.models import Service
-from services.serializers import ServiceSerializer
-from accounts.serializers import UserProfileSerializer
 
 class BookingSerializer(serializers.ModelSerializer):
     service_name = serializers.CharField(source='service.name', read_only=True)

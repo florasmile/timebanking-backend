@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import User
 from django.contrib.auth.password_validation import validate_password
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from django.contrib.auth import authenticate
 
 class EmailAuthSerializer(serializers.Serializer):
