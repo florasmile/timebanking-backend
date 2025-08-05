@@ -7,9 +7,19 @@ from django.contrib.postgres.fields import ArrayField  # PostgreSQL only
 User = get_user_model()
 
 class Service(models.Model):
+    SERVICE_TYPE_CHOICES = [
+        ("virtual", "Virtual"),
+        ("in-person", "In-person"),
+    ]
+
     name = models.CharField(max_length=255)
     category = ArrayField(models.CharField(max_length=50), blank=True, default=list)
     description = models.TextField()
+    service_type = models.CharField(
+        max_length=10,
+        choices=SERVICE_TYPE_CHOICES,
+        default="in-person"
+    )
     tags = ArrayField(models.CharField(max_length=50), blank=True, default=list)
     credit_required = models.PositiveIntegerField(
         validators=[MinValueValidator(1)]

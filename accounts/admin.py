@@ -39,8 +39,8 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    list_display = ("email", "first_name", "last_name", "street", "city", "state", "zip_code", "time_credits", "is_staff")
+    list_display = ("id","email", "first_name", "last_name", "street", "city", "state", "zip_code", "time_credits", "is_staff")
     search_fields = ("email", "first_name", "last_name", "city", "state", "zip_code")
-    ordering = ("-date_joined",)
+    ordering = ("id",)
 
 admin.site.register(User, CustomUserAdmin)
