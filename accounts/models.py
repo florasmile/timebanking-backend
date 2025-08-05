@@ -32,6 +32,9 @@ class User(AbstractUser):
     city = models.CharField(max_length=100, blank=False)
     state = models.CharField(max_length=100, blank=False)
     zip_code = models.CharField(max_length=10, blank=False)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    
     avatar = CloudinaryField('avatar', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
