@@ -50,6 +50,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'city',
             'state',
             'zip_code',
+            # 'latitude',
+            # 'longitude',
             'time_credits',
             'avatar',
         )
