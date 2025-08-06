@@ -4,12 +4,6 @@ from geopy.geocoders import Nominatim
 from .models import User
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 
-# helper to set and round coordinates
-def set_coordinates(instance, latitude, longitude):
-    # Round to 2 decimal places, make precision within 1.1km (0.7 miles)
-    instance.latitude = round(latitude, 2)
-    instance.longitude = round(longitude, 2)
-
 # try geocode with error handling
 def try_geocode(geolocator, query, timeout=10):
     try:
@@ -28,13 +22,16 @@ def geocode_address(sender, instance, **kwargs):
     if instance.street and instance.city and instance.state and instance.zip_code:
         address = f"{instance.street}, {instance.city}, {instance.state}, {instance.zip_code}"
         location = try_geocode(geolocator, address)
-        # if cannot locate address provided, use zip_code instead
+    # if cannot locate address provided, use zip_code instead
     if not location and instance.zip_code:
-            location = geolocator.geocode(
-                {"postalcode": instance.zip_code, "country": "US"}
-            )
+        zip_query = {"postalcode": instance.zip_code, "country": "US"}
+        location = try_geocode(geolocator, zip_query)
+
     if location:
-        set_coordinates(instance, location.latitude, location.longitude)
+        # Round to 2 decimal places, make precision within 1.1km (0.7 miles)
+        instance.latitude = round(location.latitude, 2)
+        instance.longitude = round(location.longitude, 2)
     else:
         print("Could not geocode address - setting coordinates to None")
-        set_coordinates(instance, None, None)
+        instance.latitude = None
+        instance.longitude = None
