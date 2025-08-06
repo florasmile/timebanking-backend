@@ -23,6 +23,8 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None  # disable username field
     email = models.EmailField(unique=True)
+    
+    is_verified = models.BooleanField(default=False) 
 
     bio = models.TextField(blank=True)
     skills = models.TextField(blank=True)

@@ -5,6 +5,9 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer, EmailAuthSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
+from .utils import send_verification_email
+from .models import User
+from django.contrib.auth.tokens import default_token_generator
 
 # /accounts/register/
 # convert to class-based views
@@ -13,10 +16,28 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            send_verification_email(user, request)
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class VerifyEmailView(APIView):
+    def get(self, request):
+        uid = request.query_params.get('uid')
+        token = request.query_params.get('token')
+
+        try:
+            user = User.objects.get(pk=uid)
+        except User.DoesNotExist:
+            return Response({"detail": "Invalid user."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            user.is_verified = True
+            user.save()
+            return Response({"detail": "Email verified successfully."})
+        else:
+            return Response({"detail": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)
+
 class EmailTokenLoginView(APIView):
     serializer_class = EmailAuthSerializer
     @extend_schema(
@@ -68,12 +89,6 @@ class UserProfileView(APIView):
     def get(self, request):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data)
-
-    # def put(self, request):
-    #     return self.update_profile(request, partial=False)
-
-    # def patch(self, request):
-    #     return self.update_profile(request, partial=True)
 
     def patch(self, request):
         serializer = self.serializer_class(request.user, data=request.data, partial=True)

@@ -39,7 +39,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    list_display = ("id","email", "first_name", "last_name", "street", "city", "state", "zip_code", "time_credits", "is_staff")
+    list_display = ("id","email", "is_verified", "first_name", "last_name", "street", "city", "state", "zip_code", "time_credits", "is_staff")
     search_fields = ("email", "first_name", "last_name", "city", "state", "zip_code")
     ordering = ("id",)
 

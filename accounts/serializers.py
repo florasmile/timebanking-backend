@@ -14,6 +14,10 @@ class EmailAuthSerializer(serializers.Serializer):
         )
         if not user:
             raise serializers.ValidationError('Invalid email/password')
+        # Add email verification check
+        if not user.is_verified:
+            raise serializers.ValidationError('Please verify your email before logging in.')
+        
         attrs['user'] = user
         return attrs
 
@@ -23,7 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password', 'password2', 'bio', 'skills', 'interests', 'street', 'city', 'state', 'zip_code', 'avatar')
+        fields = ('first_name', 'last_name', 'email', 'password', 'password2', 'bio', 'skills', 'interests', 'street', 'city', 'state', 'zip_code', 'avatar', 'is_verified')
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -54,6 +58,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'longitude',
             'time_credits',
             'avatar',
+            'is_verified'
         )
         read_only_fields = ('email', 'time_credits')
 
