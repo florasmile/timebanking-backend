@@ -13,15 +13,18 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 class ServiceListCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ServiceSerializer
-    # List all services or filter by owner/zip code
+
     def get(self, request):
+        # allows users to view a list of services created by themsevles
         owner_id = request.query_params.get('owner_id')
-        zip_code = request.query_params.get('zip_code')
+        # zip_code = request.query_params.get('zip_code')
         queryset = Service.objects.all()
         if owner_id:
-            queryset = queryset.filter(owner__id=owner_id)
-        if zip_code:
-            queryset = queryset.filter(owner__zip_code=zip_code)
+            queryset = queryset.filter(owner_id=owner_id)
+        # allow users to view services provided by others (but not themselves)
+        else:
+            queryset = queryset.exclude(owner_id=request.user.id)
+        
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
