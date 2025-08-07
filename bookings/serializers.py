@@ -69,3 +69,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         )
 
         return booking
+
+class BookingRatingReviewSerializer(serializers.Serializer):
+    customer_rating = serializers.IntegerField(min_value=1, max_value=5, required=False)
+    customer_review = serializers.CharField(required=False)

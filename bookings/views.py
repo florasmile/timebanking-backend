@@ -5,7 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import Booking
-from .serializers import BookingSerializer, BookingCreateSerializer
+from .serializers import BookingSerializer, BookingCreateSerializer, BookingRatingReviewSerializer
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Avg  # For aggregation
@@ -85,7 +85,8 @@ class BookingDetailView(GenericAPIView):
         booking = get_object_or_404(Booking, id=booking_id)
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
-
+    
+    @extend_schema(request=BookingRatingReviewSerializer, description="Update rating/review for a booking.")
     # add customer_rating and reviews to booking
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
