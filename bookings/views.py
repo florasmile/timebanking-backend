@@ -1,3 +1,5 @@
+from operator import countOf
+from django.forms import IntegerField
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -6,6 +8,8 @@ from .models import Booking
 from .serializers import BookingSerializer, BookingCreateSerializer
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
+from django.db.models import Avg  # For aggregation
+
 # Create your views here.
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -81,6 +85,57 @@ class BookingDetailView(GenericAPIView):
         booking = get_object_or_404(Booking, id=booking_id)
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
+
+    # add customer_rating and reviews to booking
+    def patch(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        service = booking.service
+
+        if booking.customer != request.user:
+            raise PermissionDenied("Only the customer can rate and review this booking.")
+        # Validate required fields
+        if 'customer_rating' not in request.data:
+            return Response(
+                {"detail": "Customer_rating must be provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            customer_rating = int(request.data['customer_rating'])
+            if not (1 <= customer_rating <= 5):  # Assuming 5-star rating system
+                raise ValueError
+        except (ValueError, TypeError):
+            return Response(
+                {"detail": "Rating must be an integer between 1 and 5"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        booking.customer_rating = customer_rating
+        # update average_rating for service
+        completed_bookings = Booking.objects.filter(
+            service=booking.service,
+            status='completed',
+            customer_rating__isnull=False
+        )
+        service.average_rating = completed_bookings.aggregate(
+            avg_rating=Avg('customer_rating')
+        )['avg_rating'] or 0.0
+        
+        service.save()
+
+        # update customer_review
+        if 'customer_review' in request.data:
+            customer_review = request.data['customer_review']
+            if not isinstance(customer_review, str) or not customer_review.strip():
+                return Response(
+                    {"detail": "Review must be a non-empty string"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            booking.customer_review = customer_review.strip()
+            # add to the customer_reviews list of the service model later
+            booking.save()
+
+            return Response({"detail": "Booking updated successfully"}, status=200)
+
 # change status
 @extend_schema(
     methods=["PATCH"],
@@ -118,10 +173,6 @@ class MarkCompletedView(GenericAPIView):
 
         booking.status = "completed"
         booking.completed_at = timezone.now()
-
-        #add customer review and ratings to booking
-
-        # update reviews and ratings in service
 
         # save data
         booking.save()
