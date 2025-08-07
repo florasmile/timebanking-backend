@@ -21,9 +21,7 @@ class Service(models.Model):
         default="in-person"
     )
     tags = ArrayField(models.CharField(max_length=50), blank=True, default=list)
-    credit_required = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
-    )
+    credit_required = models.DecimalField(max_digits=2, decimal_places=1, default=1.0) # default unit: hour
     created_at = models.DateTimeField(default=timezone.now)
     is_available = models.BooleanField(default=True)
     average_rating = models.FloatField(default=0.0)
