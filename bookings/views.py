@@ -135,7 +135,8 @@ class BookingDetailView(GenericAPIView):
             # add to the customer_reviews list of the service model later
             booking.save()
 
-            return Response({"detail": "Booking updated successfully"}, status=200)
+        serializer = self.serializer_class(booking)
+        return Response(serializer.data)
 
 # change status
 @extend_schema(
@@ -144,6 +145,7 @@ class BookingDetailView(GenericAPIView):
 )
 class MarkConfirmedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BookingSerializer
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
 
@@ -155,10 +157,12 @@ class MarkConfirmedView(GenericAPIView):
             return Response({"detail": "Booking must be in 'pending' state."}, status=400)
         booking.status = "confirmed"
         booking.save()
-        return Response({"detail": "Booking confirmed."}, status=200)
+        serializer = self.serializer_class(booking)
+        return Response(serializer.data)
     
 class MarkCompletedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BookingSerializer
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
         # Ensure only the customer can confirm the booking
@@ -178,10 +182,12 @@ class MarkCompletedView(GenericAPIView):
         # save data
         booking.save()
         
-        return Response({"detail": "Booking completed."}, status=200)
+        serializer = self.serializer_class(booking)
+        return Response(serializer.data)
 
 class MarkCancelledView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BookingSerializer
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
         
@@ -206,6 +212,7 @@ class MarkCancelledView(GenericAPIView):
         # save data
         booking.save()
         
-        return Response({"detail": "Booking cancelled and credits refunded."}, status=200)
+        serializer = self.serializer_class(booking)
+        return Response(serializer.data)
 
 
