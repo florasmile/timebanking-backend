@@ -9,6 +9,7 @@ from .serializers import BookingSerializer, BookingCreateSerializer, BookingRati
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Avg  # For aggregation
+from services.utils import update_service_average # Helper function
 
 # Create your views here.
 
@@ -111,17 +112,8 @@ class BookingDetailView(GenericAPIView):
             )
         
         booking.customer_rating = customer_rating
-        # update average_rating for service
-        completed_bookings = Booking.objects.filter(
-            service=booking.service,
-            status='completed',
-            customer_rating__isnull=False
-        )
-        service.average_rating = completed_bookings.aggregate(
-            avg_rating=Avg('customer_rating')
-        )['avg_rating'] or 0.0
-        
-        service.save()
+        # update average_rating for service using helper function
+        update_service_average(service)
 
         # update customer_review
         if 'customer_review' in request.data:
