@@ -15,5 +15,17 @@ class BookingAdmin(admin.ModelAdmin):
         'customer_id',
         'service_id',
     )
-    
+    list_filter = (
+        'status',
+        'service__service_type',
+        'customer',
+        'owner',
+    )
+    search_fields = (
+        'service__name',
+        'customer__email',
+        'owner__email',
+    )
+    date_hierarchy = 'booked_at'
+
 admin.site.register(Booking, BookingAdmin)

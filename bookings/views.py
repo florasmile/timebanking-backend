@@ -9,6 +9,7 @@ from .serializers import BookingSerializer, BookingCreateSerializer, BookingRati
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Avg  # For aggregation
+from services.utils import update_service_average # Helper function
 
 # Create your views here.
 
@@ -56,9 +57,7 @@ class BookingListCreateView(GenericAPIView):
             queryset = Booking.objects.filter(customer__id=customer_id)
         else:
             return Response({"detail": "Please provide either owner_id or customer_id."}, status=400)
-        
-        # print("All bookings for customer:", Booking.objects.filter(customer__id=customer_id))
-        # filter by status
+
         if status:
             queryset = queryset.filter(status=status)
 
@@ -91,49 +90,26 @@ class BookingDetailView(GenericAPIView):
     def patch(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
         service = booking.service
-
+        #check permission
         if booking.customer != request.user:
             raise PermissionDenied("Only the customer can rate and review this booking.")
-        # Validate required fields
-        if 'customer_rating' not in request.data:
-            return Response(
-                {"detail": "Customer_rating must be provided"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        try:
-            customer_rating = int(request.data['customer_rating'])
-            if not (1 <= customer_rating <= 5):  # Assuming 5-star rating system
-                raise ValueError
-        except (ValueError, TypeError):
-            return Response(
-                {"detail": "Rating must be an integer between 1 and 5"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        booking.customer_rating = customer_rating
-        # update average_rating for service
-        completed_bookings = Booking.objects.filter(
-            service=booking.service,
-            status='completed',
-            customer_rating__isnull=False
-        )
-        service.average_rating = completed_bookings.aggregate(
-            avg_rating=Avg('customer_rating')
-        )['avg_rating'] or 0.0
-        
-        service.save()
 
-        # update customer_review
+        serializer = BookingRatingReviewSerializer(
+            booking,
+            data=request.data,
+            partial=False
+        )
+        serializer.is_valid(raise_exception=True)
         if 'customer_review' in request.data:
             customer_review = request.data['customer_review']
-            if not isinstance(customer_review, str) or not customer_review.strip():
-                return Response(
-                    {"detail": "Review must be a non-empty string"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            booking.customer_review = customer_review.strip()
-            # add to the customer_reviews list of the service model later
-            booking.save()
+            if customer_review.strip():                
+                booking.customer_review = customer_review.strip()
+                service.customer_reviews.append(customer_review)
+                service.save(update_fields=['customer_reviews'])
+        
+        booking.customer_rating = request.data['customer_rating']
+        booking.save()
+        update_service_average(service)
 
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
