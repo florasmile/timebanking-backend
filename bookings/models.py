@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from services.models import Service
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Booking(models.Model):
     class Status(models.TextChoices):
@@ -17,7 +18,11 @@ class Booking(models.Model):
     booked_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     customer_review = models.TextField(blank=True)
-    customer_rating = models.IntegerField(null=True, blank=True)
+    customer_rating = models.IntegerField(
+        null=True, 
+        blank=True,
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
 
   #retain booking records when the owner/customer/service is deleted
     owner = models.ForeignKey(
