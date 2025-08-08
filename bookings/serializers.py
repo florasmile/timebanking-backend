@@ -71,5 +71,13 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         return booking
 
 class BookingRatingReviewSerializer(serializers.Serializer):
-    customer_rating = serializers.IntegerField(min_value=1, max_value=5, required=False)
-    customer_review = serializers.CharField(required=False)
+    class Meta:
+        model = Booking
+        fields = ['customer_rating', 'customer_review']
+
+    def validate_customer_rating(self, value):
+        if value is None:
+            raise serializers.ValidationError("Rating is required.")
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError("Rating must be between 1 and 5.")
+        return value

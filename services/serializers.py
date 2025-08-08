@@ -25,6 +25,12 @@ class ServiceSerializer(serializers.ModelSerializer):
             'remaining_sessions', 'is_available', 'latitude', 'longitude', 'city', 'zip_code', 'customer_reviews'
         ]
 
+    def validate_average_rating(self, value):
+        if not (0 <= value <= 5):
+            raise serializers.ValidationError("Average rating must be between 0 and 5.")
+        return value
+
+
     def create(self, validated_data):
         total_sessions = validated_data.get('total_sessions')
         # Set remaining_sessions to total_sessions
