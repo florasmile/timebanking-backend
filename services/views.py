@@ -15,16 +15,12 @@ class ServiceListCreateView(APIView):
     serializer_class = ServiceSerializer
 
     def get(self, request):
-        # allows users to view a list of services created by themsevles
+        # allows users to view a list of services created by themselves
         owner_id = request.query_params.get('owner_id')
-        # zip_code = request.query_params.get('zip_code')
         queryset = Service.objects.all()
         if owner_id:
             queryset = queryset.filter(owner_id=owner_id)
-        # allow users to view services provided by others (but not themselves)
-        else:
-            queryset = queryset.exclude(owner_id=request.user.id)
-        
+
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
