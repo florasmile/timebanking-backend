@@ -24,6 +24,8 @@ class User(AbstractUser):
     username = None  # disable username field
     email = models.EmailField(unique=True)
 
+    is_verified = models.BooleanField(default=False)  # Add default
+    
     bio = models.TextField(blank=True)
     skills = models.TextField(blank=True)
     interests = ArrayField(models.CharField(max_length=50), blank=True, default=list) 

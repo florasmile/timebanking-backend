@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'cloudinary',   # cloudinary for image uploads
     'cloudinary_storage',
+    'django_extensions', # for dropping tables in db
 ]
 
 MIDDLEWARE = [
