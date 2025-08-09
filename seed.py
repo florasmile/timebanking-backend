@@ -21,8 +21,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.61,
-            "longitude": -122.33
+            "latitude": 47.62,
+            "longitude": -122.34
         },
         {
             "email": "michael.johnson@example.com",
@@ -36,7 +36,7 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.60,
+            "latitude": 47.61,
             "longitude": -122.33
         },
         {
@@ -51,8 +51,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.61,
-            "longitude": -122.34
+            "latitude": 47.60,
+            "longitude": -122.32
         },
         {
             "email": "david.kim@example.com",
@@ -66,8 +66,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.60,
-            "longitude": -122.33
+            "latitude": 47.63,
+            "longitude": -122.35
         },
         {
             "email": "sarah.miller@example.com",
@@ -81,8 +81,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.60,
-            "longitude": -122.33
+            "latitude": 47.59,
+            "longitude": -122.31
         },
         {
             "email": "james.rodriguez@example.com",
@@ -96,8 +96,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98101",
-            "latitude": 47.60,
-            "longitude": -122.34
+            "latitude": 47.64,
+            "longitude": -122.36
         },
         {
             "email": "oliver.martinez@example.com",
@@ -112,7 +112,7 @@ def create_seed_users():
             "state": "WA",
             "zip_code": "98102",
             "latitude": 47.62,
-            "longitude": -122.32
+            "longitude": -122.31
         },
         {
             "email": "isabella.nguyen@example.com",
@@ -126,7 +126,7 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98102",
-            "latitude": 47.62,
+            "latitude": 47.63,
             "longitude": -122.32
         },
         {
@@ -142,7 +142,7 @@ def create_seed_users():
             "state": "WA",
             "zip_code": "98103",
             "latitude": 47.66,
-            "longitude": -122.34
+            "longitude": -122.33
         },
         {
             "email": "mia.chen@example.com",
@@ -157,7 +157,7 @@ def create_seed_users():
             "state": "WA",
             "zip_code": "98103",
             "latitude": 47.67,
-            "longitude": -122.33
+            "longitude": -122.34
         },
         {
             "email": "lucas.wilson@example.com",
@@ -171,8 +171,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98103",
-            "latitude": 47.66,
-            "longitude": -122.34
+            "latitude": 47.65,
+            "longitude": -122.35
         }, 
         {
             "email": "ava.patel@example.com",
@@ -187,7 +187,7 @@ def create_seed_users():
             "state": "WA",
             "zip_code": "98105",
             "latitude": 47.66,
-            "longitude": -122.31
+            "longitude": -122.30
         },
         {
             "email": "noah.kim@example.com",
@@ -201,7 +201,7 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98105",
-            "latitude": 47.66,
+            "latitude": 47.67,
             "longitude": -122.31
         },
         {
@@ -216,8 +216,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98105",
-            "latitude": 47.66,
-            "longitude": -122.31
+            "latitude": 47.65,
+            "longitude": -122.32
         },
         {
             "email": "william.jackson@example.com",
@@ -231,8 +231,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98105",
-            "latitude": 47.66,
-            "longitude": -122.31
+            "latitude": 47.64,
+            "longitude": -122.33
         },
         {
             "email": "charlotte.brown@example.com",
@@ -246,8 +246,8 @@ def create_seed_users():
             "city": "Seattle",
             "state": "WA",
             "zip_code": "98105",
-            "latitude": 47.66,
-            "longitude": -122.31
+            "latitude": 47.68,
+            "longitude": -122.29
         }
     ]
 
