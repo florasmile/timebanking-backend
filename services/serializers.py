@@ -7,6 +7,8 @@ class ServiceSerializer(serializers.ModelSerializer):
     longitude = serializers.FloatField(source='owner.longitude', read_only=True)
     city=serializers.CharField(source='owner.city', read_only=True)
     zip_code=serializers.CharField(source='owner.zip_code', read_only=True)
+    credit_required = serializers.IntegerField(min_value=1)
+    total_sessions = serializers.IntegerField(min_value=1)
 
     customer_reviews = serializers.ListField(
         child=serializers.CharField(),

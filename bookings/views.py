@@ -65,14 +65,14 @@ class BookingListCreateView(GenericAPIView):
         # print("serializer.data", serializer.data)
         return Response(serializer.data)
     
-    #only customer is allowed to create a booking
+    # only customer is allowed to create a booking
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-           
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+        # return the full booking data
+        output = BookingSerializer(booking, context={'request': request}).data
+        return Response(output, status=status.HTTP_201_CREATED)
 
 # GET/PATCH
 # /bookings/<booking_id>
