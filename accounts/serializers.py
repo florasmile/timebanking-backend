@@ -56,7 +56,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'time_credits',
             'avatar',
         )
-        read_only_fields = ('email', 'time_credits')
+        read_only_fields = ('email', 'time_credits', 'latitude', 'longitude')
 
     def to_representation(self, instance):
         """Override to ensure avatar returns full URL"""
