@@ -20,7 +20,10 @@ class ServiceListCreateView(APIView):
         queryset = Service.objects.all()
         if owner_id:
             queryset = queryset.filter(owner_id=owner_id)
-
+        # allow users to view services provided by others (but not themselves)
+        else:
+            queryset = queryset.exclude(owner_id=request.user.id)
+            
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
