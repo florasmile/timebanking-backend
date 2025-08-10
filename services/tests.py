@@ -43,10 +43,41 @@ class TestServiceEndpoints(APITestCase):
         self.service_list_url = reverse('service-list-create')
 
     def test_list_services(self):
+        # test without owner_id param - result should not include user1's service, expect empty list
         response = self.client.get(self.service_list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertGreaterEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 0)
+        # self.assertEqual(response.data[0]['name'], self.service.name)
+
+        # create a service for user 2
+        service2 = Service.objects.create(
+            owner=self.user2,
+            name="Piano Lessons",
+            category=["music"],
+            description="Learn piano from scratch.",
+            service_type="virtual",
+            tags=["piano", "music"],
+            credit_required=3,
+            total_sessions=10,
+            remaining_sessions=10,
+        )
+        # test without owner_id param - should see service2 only
+        response = self.client.get(self.service_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], service2.name)
+
+        # test with owner_id pram - should see owner1's service only
+        response = self.client.get(self.service_list_url, {'owner_id': self.user1.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['name'], self.service.name)
+
+        # Test with owner_id parameter for user2 - should show only user2's services
+        response = self.client.get(self.service_list_url, {'owner_id': self.user2.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], service2.name)
 
     def test_create_service(self):
         response = self.client.post(self.service_list_url, self.service_data, format="json")

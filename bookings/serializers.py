@@ -55,8 +55,8 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         # Deduct one session from the service
         service.remaining_sessions -= 1
         if service.remaining_sessions == 0:
-            service.is_available == False
-        service.save()
+            service.is_available = False
+        service.save(update_fields=["remaining_sessions", "is_available"])
 
         #create a booking
         booking = Booking.objects.create(
