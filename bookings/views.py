@@ -88,8 +88,10 @@ class BookingDetailView(GenericAPIView):
     
 # change status
 @extend_schema(
+    request=None,
     methods=["PATCH"],
-    responses={200: BookingSerializer}
+    responses={200: BookingSerializer},
+    description="Update status of booking to 'confirmed', by owner only."
 )
 class MarkConfirmedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -151,6 +153,12 @@ class MarkCompletedView(GenericAPIView):
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
 
+@extend_schema(
+    request=None,
+    methods=["PATCH"],
+    responses={200: BookingSerializer},
+    description="Update status of booking to 'cancelled', by owner or customer."
+)
 class MarkCancelledView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BookingSerializer
