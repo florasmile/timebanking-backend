@@ -69,12 +69,6 @@ class UserProfileView(APIView):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data)
 
-    # def put(self, request):
-    #     return self.update_profile(request, partial=False)
-
-    # def patch(self, request):
-    #     return self.update_profile(request, partial=True)
-
     def patch(self, request):
         serializer = self.serializer_class(request.user, data=request.data, partial=True)
         if serializer.is_valid():

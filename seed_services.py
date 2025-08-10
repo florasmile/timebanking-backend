@@ -261,8 +261,8 @@ def create_seed_services():
         },
     ]
 
-    # Create 25 services with random owners
-    for i in range(25):
+    # Create 30 services with random owners
+    for i in range(30):
         template = random.choice(service_templates)
         owner = random.choice(demo_users)
         

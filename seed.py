@@ -9,6 +9,7 @@ from accounts.models import User
 
 def create_seed_users():
     demo_users = [
+        # Belltown (3 users)
         {
             "email": "alex.johnson@example.com",
             "first_name": "Alex",
@@ -17,11 +18,11 @@ def create_seed_users():
             "skills": "Python, Cooking, Photography",
             "interests": ["hiking", "coding"],
             "time_credits": 5.0,
-            "street": "123 Tech Lane",
+            "street": "2321 2nd Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
-            "latitude": 47.62,
+            "zip_code": "98121",
+            "latitude": 47.61,
             "longitude": -122.34
         },
         {
@@ -32,12 +33,12 @@ def create_seed_users():
             "skills": "Investment Strategies, Excel, Data Visualization",
             "interests": ["wine tasting", "sailing"],
             "time_credits": 5.0,
-            "street": "701 5th Ave",
+            "street": "2719 4th Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
-            "latitude": 47.61,
-            "longitude": -122.33
+            "zip_code": "98121",
+            "latitude": 47.62,
+            "longitude": -122.35
         },
         {
             "email": "emily.wong@example.com",
@@ -47,13 +48,15 @@ def create_seed_users():
             "skills": "Hospitality, Event Planning, Japanese",
             "interests": ["food tours", "theater"],
             "time_credits": 8.0,
-            "street": "99 Union St",
+            "street": "2211 3rd Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
+            "zip_code": "98121",
             "latitude": 47.60,
-            "longitude": -122.32
+            "longitude": -122.33
         },
+        
+        # Central District (3 users)
         {
             "email": "david.kim@example.com",
             "first_name": "David",
@@ -62,12 +65,12 @@ def create_seed_users():
             "skills": "Latte Art, Coffee Roasting, Customer Service",
             "interests": ["live music", "skateboarding"],
             "time_credits": 3.0,
-            "street": "103 Cherry St",
+            "street": "1801 23rd Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
-            "latitude": 47.63,
-            "longitude": -122.35
+            "zip_code": "98122",
+            "latitude": 47.61,
+            "longitude": -122.30
         },
         {
             "email": "sarah.miller@example.com",
@@ -77,11 +80,11 @@ def create_seed_users():
             "skills": "Legal Research, Public Speaking, Spanish",
             "interests": ["social justice", "hiking"],
             "time_credits": 6.0,
-            "street": "516 3rd Ave",
+            "street": "1516 19th Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
-            "latitude": 47.59,
+            "zip_code": "98122",
+            "latitude": 47.62,
             "longitude": -122.31
         },
         {
@@ -92,13 +95,15 @@ def create_seed_users():
             "skills": "Public Speaking, History, Photography",
             "interests": ["urban exploration", "craft beer"],
             "time_credits": 4.0,
-            "street": "614 1st Ave",
+            "street": "1423 21st Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98101",
-            "latitude": 47.64,
-            "longitude": -122.36
+            "zip_code": "98122",
+            "latitude": 47.60,
+            "longitude": -122.29
         },
+        
+        # Queen Anne (3 users)
         {
             "email": "oliver.martinez@example.com",
             "first_name": "Oliver",
@@ -107,146 +112,214 @@ def create_seed_users():
             "skills": "Craft Cocktails, Flair Bartending, Spirits Knowledge",
             "interests": ["cocktail competitions", "vinyl records"],
             "time_credits": 6.0,
-            "street": "928 12th Ave",
+            "street": "320 W Galer St",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98102",
-            "latitude": 47.62,
-            "longitude": -122.31
+            "zip_code": "98119",
+            "latitude": 47.63,
+            "longitude": -122.36
         },
         {
             "email": "isabella.nguyen@example.com",
             "first_name": "Isabella",
             "last_name": "Nguyen",
-            "bio": "Owner of a Capitol Hill vintage clothing store",
+            "bio": "Owner of a vintage clothing store",
             "skills": "Fashion Styling, Vintage Curating, Small Business",
             "interests": ["thrifting", "drag shows"],
             "time_credits": 4.0,
-            "street": "1501 Broadway Ave",
+            "street": "500 1st Ave N",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98102",
-            "latitude": 47.63,
-            "longitude": -122.32
+            "zip_code": "98109",
+            "latitude": 47.62,
+            "longitude": -122.37
         },
         {
             "email": "ethan.johnson@example.com",
             "first_name": "Ethan",
             "last_name": "Johnson",
-            "bio": "Software engineer at Adobe, Wallingford resident",
+            "bio": "Software engineer at Adobe",
             "skills": "JavaScript, UI Design, Technical Writing",
             "interests": ["board games", "home brewing"],
             "time_credits": 5.0,
-            "street": "1723 N 45th St",
+            "street": "223 8th Ave W",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98103",
-            "latitude": 47.66,
-            "longitude": -122.33
+            "zip_code": "98119",
+            "latitude": 47.64,
+            "longitude": -122.35
         },
+        
+        # First Hill (3 users)
         {
             "email": "mia.chen@example.com",
             "first_name": "Mia",
             "last_name": "Chen",
-            "bio": "Elementary school teacher at Green Lake",
+            "bio": "Elementary school teacher",
             "skills": "Curriculum Development, Mandarin, Classroom Management",
             "interests": ["children's literature", "hiking"],
             "time_credits": 7.0,
-            "street": "3901 Woodlawn Ave N",
+            "street": "1016 Boylston Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98103",
-            "latitude": 47.67,
-            "longitude": -122.34
+            "zip_code": "98104",
+            "latitude": 47.60,
+            "longitude": -122.32
         },
         {
             "email": "lucas.wilson@example.com",
             "first_name": "Lucas",
             "last_name": "Wilson",
-            "bio": "Chef at The Walrus and the Carpenter",
+            "bio": "Chef at local restaurant",
             "skills": "Oyster Shucking, French Cuisine, Food Safety",
             "interests": ["fishing", "fermentation"],
             "time_credits": 3.0,
-            "street": "1443 N 46th St",
+            "street": "1215 Seneca St",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98103",
-            "latitude": 47.65,
-            "longitude": -122.35
-        }, 
+            "zip_code": "98101",
+            "latitude": 47.61,
+            "longitude": -122.33
+        },
         {
             "email": "ava.patel@example.com",
             "first_name": "Ava",
             "last_name": "Patel",
-            "bio": "UW grad student in marine biology",
+            "bio": "Medical student at UW",
             "skills": "Lab Research, Scientific Writing, SCUBA Diving",
             "interests": ["ocean conservation", "yoga"],
             "time_credits": 2.0,
-            "street": "4707 17th Ave NE",
+            "street": "815 9th Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98105",
-            "latitude": 47.66,
-            "longitude": -122.30
+            "zip_code": "98104",
+            "latitude": 47.59,
+            "longitude": -122.31
         },
+        
+        # Capitol Hill (3 users)
         {
             "email": "noah.kim@example.com",
             "first_name": "Noah",
             "last_name": "Kim",
-            "bio": "Bookstore manager at University Book Store",
+            "bio": "Bookstore manager",
             "skills": "Literary Criticism, Inventory Management, Event Planning",
             "interests": ["poetry slams", "book binding"],
             "time_credits": 5.0,
-            "street": "4326 University Way NE",
+            "street": "1501 10th Ave E",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98105",
-            "latitude": 47.67,
-            "longitude": -122.31
+            "zip_code": "98102",
+            "latitude": 47.62,
+            "longitude": -122.32
         },
         {
             "email": "sophia.gonzalez@example.com",
             "first_name": "Sophia",
             "last_name": "Gonzalez",
-            "bio": "Barista at Cafe Allegro",
+            "bio": "Barista at local cafe",
             "skills": "Latte Art, Coffee Roasting, Customer Service",
             "interests": ["live music", "urban sketching"],
             "time_credits": 4.0,
-            "street": "4214 University Way NE",
+            "street": "1212 11th Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98105",
-            "latitude": 47.65,
-            "longitude": -122.32
+            "zip_code": "98122",
+            "latitude": 47.63,
+            "longitude": -122.31
         },
         {
             "email": "william.jackson@example.com",
             "first_name": "William",
             "last_name": "Jackson",
-            "bio": "Research scientist at UW Medical Center",
+            "bio": "Research scientist",
             "skills": "Data Analysis, Python, Medical Research",
             "interests": ["science outreach", "mountain biking"],
             "time_credits": 6.0,
-            "street": "4545 15th Ave NE",
+            "street": "1313 12th Ave",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98105",
-            "latitude": 47.64,
-            "longitude": -122.33
+            "zip_code": "98122",
+            "latitude": 47.61,
+            "longitude": -122.30
         },
+        
+        # South Lake Union (3 users)
         {
             "email": "charlotte.brown@example.com",
             "first_name": "Charlotte",
             "last_name": "Brown",
-            "bio": "Librarian at UW Suzzallo Library",
-            "skills": "Research Methods, Archival Preservation, Information Systems",
+            "bio": "UX Designer at Amazon",
+            "skills": "UI/UX Design, User Research, Prototyping",
             "interests": ["historical fiction", "tea culture"],
             "time_credits": 4.0,
-            "street": "4000 15th Ave NE",
+            "street": "400 Fairview Ave N",
             "city": "Seattle",
             "state": "WA",
-            "zip_code": "98105",
-            "latitude": 47.68,
+            "zip_code": "98109",
+            "latitude": 47.62,
+            "longitude": -122.34
+        },
+        {
+            "email": "liam.smith@example.com",
+            "first_name": "Liam",
+            "last_name": "Smith",
+            "bio": "Biotech researcher",
+            "skills": "Molecular Biology, Data Analysis, Lab Techniques",
+            "interests": ["rock climbing", "science fiction"],
+            "time_credits": 5.0,
+            "street": "500 Mercer St",
+            "city": "Seattle",
+            "state": "WA",
+            "zip_code": "98109",
+            "latitude": 47.63,
+            "longitude": -122.33
+        },
+        {
+            "email": "amelia.jones@example.com",
+            "first_name": "Amelia",
+            "last_name": "Jones",
+            "bio": "Software developer at Tableau",
+            "skills": "Data Visualization, SQL, Business Intelligence",
+            "interests": ["data journalism", "yoga"],
+            "time_credits": 6.0,
+            "street": "600 Westlake Ave N",
+            "city": "Seattle",
+            "state": "WA",
+            "zip_code": "98109",
+            "latitude": 47.61,
+            "longitude": -122.35
+        },
+        
+        # Cherry Hill (2 users)
+        {
+            "email": "benjamin.taylor@example.com",
+            "first_name": "Benjamin",
+            "last_name": "Taylor",
+            "bio": "High school teacher",
+            "skills": "History, Curriculum Development, Debate Coaching",
+            "interests": ["historical reenactment", "gardening"],
+            "time_credits": 4.0,
+            "street": "2701 E Cherry St",
+            "city": "Seattle",
+            "state": "WA",
+            "zip_code": "98122",
+            "latitude": 47.60,
+            "longitude": -122.30
+        },
+        {
+            "email": "harper.white@example.com",
+            "first_name": "Harper",
+            "last_name": "White",
+            "bio": "Graphic designer",
+            "skills": "Adobe Creative Suite, Branding, Illustration",
+            "interests": ["printmaking", "indie music"],
+            "time_credits": 3.0,
+            "street": "2600 E Jefferson St",
+            "city": "Seattle",
+            "state": "WA",
+            "zip_code": "98112",
+            "latitude": 47.59,
             "longitude": -122.29
         }
     ]
