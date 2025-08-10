@@ -101,7 +101,7 @@ def create_seed_services():
         },
         {
             "name": "Python Programming Tutoring",
-            "category": ["education", "technology"],
+            "category": ["education", "technology", "tutoring"],
             "description": "One-on-one Python lessons for beginners to advanced coders",
             "service_type": "virtual",
             "tags": ["coding", "web-development"],
@@ -261,8 +261,8 @@ def create_seed_services():
         },
     ]
 
-    # Create 30 services with random owners
-    for i in range(30):
+    # Create 45 services with random owners
+    for i in range(45):
         template = random.choice(service_templates)
         owner = random.choice(demo_users)
         
