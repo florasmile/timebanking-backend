@@ -70,7 +70,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
         return booking
 
-class BookingRatingReviewSerializer(serializers.Serializer):
+class BookingRatingReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['customer_rating', 'customer_review']

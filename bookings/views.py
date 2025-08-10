@@ -85,35 +85,7 @@ class BookingDetailView(GenericAPIView):
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
     
-    @extend_schema(request=BookingRatingReviewSerializer, description="Update rating/review for a booking.")
-    # add customer_rating and reviews to booking
-    def patch(self, request, booking_id):
-        booking = get_object_or_404(Booking, id=booking_id)
-        service = booking.service
-        #check permission
-        if booking.customer != request.user:
-            raise PermissionDenied("Only the customer can rate and review this booking.")
-
-        serializer = BookingRatingReviewSerializer(
-            booking,
-            data=request.data,
-            partial=False
-        )
-        serializer.is_valid(raise_exception=True)
-        if 'customer_review' in request.data:
-            customer_review = request.data['customer_review']
-            if customer_review.strip():                
-                booking.customer_review = customer_review.strip()
-                service.customer_reviews.append(customer_review)
-                service.save(update_fields=['customer_reviews'])
-        
-        booking.customer_rating = request.data['customer_rating']
-        booking.save()
-        update_service_average(service)
-
-        serializer = self.serializer_class(booking)
-        return Response(serializer.data)
-
+    
 # change status
 @extend_schema(
     methods=["PATCH"],
@@ -136,6 +108,7 @@ class MarkConfirmedView(GenericAPIView):
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
     
+@extend_schema(request=BookingRatingReviewSerializer, description="Set booking status to 'completed' and update rating/review.")
 class MarkCompletedView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BookingSerializer
@@ -146,17 +119,34 @@ class MarkCompletedView(GenericAPIView):
             raise PermissionDenied("Only the customer can confirm the completion of this booking.")
         if booking.status != "confirmed":
             return Response({"detail": "Booking must be in 'confirmed' state."}, status=400)
+        # validate request data
+        serializer = BookingRatingReviewSerializer(
+            booking,
+            data=request.data,
+            partial=False
+        )
+        serializer.is_valid(raise_exception=True)
         # add time_credits to owner
         owner = booking.owner
         service = booking.service
         owner.time_credits += service.credit_required
         owner.save()
 
+        #update booking status
         booking.status = "completed"
         booking.completed_at = timezone.now()
 
-        # save data
+        # add customer_review
+        if 'customer_review' in request.data:
+            customer_review = request.data['customer_review']
+            if customer_review.strip():                
+                booking.customer_review = customer_review.strip()
+                service.customer_reviews.append(customer_review)
+                service.save(update_fields=['customer_reviews'])
+        # add customer_rating
+        booking.customer_rating = request.data['customer_rating']
         booking.save()
+        update_service_average(service)
         
         serializer = self.serializer_class(booking)
         return Response(serializer.data)
