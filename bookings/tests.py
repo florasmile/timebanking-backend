@@ -151,13 +151,16 @@ class TestBookingEndpoints(APITestCase):
             owner=self.owner,
             status="confirmed"
         )
+        data = {"customer_rating": 3.0, "customer_review": "It really helps!"}
         url = reverse('booking-completed', args=[booking.id])
         # Customer can complete
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.customer_token.key)
-        response = self.client.patch(url, format="json")
+        response = self.client.patch(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         booking.refresh_from_db()
         self.assertEqual(booking.status, "completed")
+        self.assertEqual(booking.customer_rating, data['customer_rating'])
+        self.assertEqual(booking.customer_review, data['customer_review'])
         # Owner cannot complete
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.owner_token.key)
         response = self.client.patch(url, format="json")
