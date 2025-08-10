@@ -269,6 +269,7 @@ def create_seed_services():
         # Vary created_at dates over past 3 months
         created_at = timezone.now() - timedelta(days=random.randint(0, 90))
         
+        total_sessions = random.randint(1, 20)
         service = Service.objects.create(
             owner=owner,
             name=template["name"],
@@ -279,8 +280,8 @@ def create_seed_services():
             credit_required=template["credit_required"],
             created_at=created_at,
             is_available=True,
-            total_sessions=random.randint(1, 20),
-            remaining_sessions=random.randint(0, 5),
+            total_sessions=total_sessions,
+            remaining_sessions=random.randint(1, total_sessions),
             average_rating=round(random.uniform(3.5, 5.0), 1)
         )
         
