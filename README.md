@@ -71,10 +71,12 @@ You can explore all available endpoints and test them in-browser using Swagger d
 
 🔗 [Swagger API Docs](https://timebanking-backend.onrender.com/api/docs/)
 
+- 🔗 [Deployed Community TimeBanking web app](https://timebanking-frontend.onrender.com/)
 
 ## 🔗 Related Repos
 
-- Frontend: [Community TimeBanking (Frontend)](https://github.com/malikelmessiry/timebanking-frontend)
+- [Community TimeBanking (Frontend) Repo](https://github.com/malikelmessiry/timebanking-frontend)
+
   
 ## 🤝 Team
 
