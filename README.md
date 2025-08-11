@@ -80,7 +80,7 @@ You can explore all available endpoints and test them in-browser using Swagger d
   
 ## 🤝 Team
 
-- Dehui  
-- Malik  
-- Mikaela
-- Natasha  
+- Dehui Hu
+- Malik Elmessiry
+- Mikaela Baluyot
+- Natasha Gaye
