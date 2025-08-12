@@ -2,6 +2,13 @@
 
 Backend for our group project built with **Django** and **PostgreSQL**.
 
+### 🤝 Team
+
+* Dehui Hu
+* Malik Elmessiry
+* Mikaela Baluyot
+* Natasha Gaye
+
 ---
 
 ## 🌐 Overview
@@ -24,6 +31,27 @@ It supports features such as:
 - **PostgreSQL**
 - **Cloudinary** for media upload
 - **Render** for deployment
+
+---
+
+
+## 🌍 Deployment
+
+The backend is deployed via **Render** and accessible at:
+
+- 🔗 [Deployed TimeBank Backend](https://timebanking-backend.onrender.com)
+- 🔗 [Deployed TimeBank Frontend](https://timebanking-frontend.onrender.com/)
+
+You can explore all available endpoints and test them in-browser using Swagger docs:
+
+- 🔗 [Swagger API Docs](https://timebanking-backend.onrender.com/api/docs/)
+
+
+---
+
+## 📌 Related Repos
+
+- [TimeBank (Front-End) Repo](https://github.com/malikelmessiry/timebanking-frontend)
 
 ---
 
@@ -77,29 +105,4 @@ python manage.py test <app_name>
 
 ---
 
-## 🌍 Deployment
-
-The backend is deployed via **Render** and accessible at:
-
-- 🔗 [Deployed TimeBank Backend](https://timebanking-backend.onrender.com)
-- 🔗 [Deployed TimeBank Frontend](https://timebanking-frontend.onrender.com/)
-
-You can explore all available endpoints and test them in-browser using Swagger docs:
-
-- 🔗 [Swagger API Docs](https://timebanking-backend.onrender.com/api/docs/)
-
-
----
-
-## 📌 Related Repos
-
-- [TimeBank (Front-End) Repo](https://github.com/malikelmessiry/timebanking-frontend)
-
----
-
-## 🤝 Team
-
-- Dehui Hu
-- Malik Elmessiry
-- Mikaela Baluyot
-- Natasha Gaye
+### Thank You! 🤝
